@@ -10,6 +10,8 @@
 #include <linux/videodev2.h>
 #include <sys/mman.h>
 #include <SDL2/SDL.h>
+#define W 640
+#define H 480
 int SDLStart=0;
 int main(){
     char *device_name= "/dev/video0";
@@ -22,12 +24,10 @@ int main(){
     SDL_Renderer *render;
     if (SDL_Init(SDL_INIT_VIDEO) != 0)
                 return SDL_GetError();
-    printf("Init...\n");
-    printf("Init random mass...\n");
-    wnd = SDL_CreateWindow("Title",  800,  0, 640, 480, SDL_WINDOW_SHOWN);
+    wnd = SDL_CreateWindow("Title",  800,  0, W, H, SDL_WINDOW_SHOWN);
     render = SDL_CreateRenderer(wnd, -1, SDL_RENDERER_ACCELERATED);
     while (1)
-{
+    {
 //setting by default 640 X 480 X2 bytes YUV2  30 fps;;
 /* prepare buffer on mmap*/
         struct v4l2_requestbuffers   RQBUFF;
@@ -52,7 +52,7 @@ int main(){
             file_device,
             LOADBUFF.m.offset);
 //extract und render
-        int8_t RAWBUFF[640*480];
+        int8_t RAWBUFF[W*H];
         int8_t * o=RAWBUFF;
         int8_t * q;
         memset(&LOADBUFF, 0, sizeof(LOADBUFF));
@@ -65,24 +65,19 @@ int main(){
             /**************STREAM********/
         LOADBUFF.type = V4L2_BUF_TYPE_VIDEO_CAPTURE;
         LOADBUFF.memory = V4L2_MEMORY_MMAP;
-        while (ioctl(file_device, VIDIOC_DQBUF, &LOADBUFF) == EAGAIN)
-        {   }
+        while (ioctl(file_device, VIDIOC_DQBUF, &LOADBUFF) == EAGAIN){   }
         q = MYBUFF;
-        int x;
-        int y;
-        for (x=0;x<640;x++){
-            for (y=0;y<480;y++){
+        int x,y;
+        for (x=0;x<W;x++){
+            for (y=0;y<H;y++){
                 *o=*q;
                 o++;q++;q++;
             }
         }
-
-        int i = 0;
-        int j = 0;
         int8_t* pointer=RAWBUFF;
-        for (j = 0; j<y; j++)
+        for (int j = 0; j<y; j++)
         {
-            for (i = 0; i<x; i++)
+            for (int i = 0; i<x; i++)
             {
                 SDL_SetRenderDrawColor(render, *(pointer), *(pointer), *(pointer++), 255);
                 SDL_RenderDrawPoint(render, i, j);
