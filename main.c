@@ -18,6 +18,14 @@ int main(){
         printf ("%s error %d, %s\n",device_name, errno, strerror(errno));
         exit(EXIT_FAILURE);
     };
+    SDL_Window *wnd;
+    SDL_Renderer *render;
+    if (SDL_Init(SDL_INIT_VIDEO) != 0)
+                return SDL_GetError();
+    printf("Init...\n");
+    printf("Init random mass...\n");
+    wnd = SDL_CreateWindow("Title",  800,  0, 640, 480, SDL_WINDOW_SHOWN);
+    render = SDL_CreateRenderer(wnd, -1, SDL_RENDERER_ACCELERATED);
     while (1)
 {
 //setting by default 640 X 480 X2 bytes YUV2  30 fps;;
@@ -68,19 +76,9 @@ int main(){
                 o++;q++;q++;
             }
         }
-        SDL_Window *wnd;
-        SDL_Renderer *render;
+
         int i = 0;
         int j = 0;
-        if (SDLStart!=1){
-            if (SDL_Init(SDL_INIT_VIDEO) != 0)
-                return SDL_GetError();
-            int counter = 0;
-            printf("Init...\n");
-            printf("Init random mass...\n");
-            wnd = SDL_CreateWindow("Title",  800,  0, x, y, SDL_WINDOW_SHOWN);
-            render = SDL_CreateRenderer(wnd, -1, SDL_RENDERER_ACCELERATED);
-        }
         int8_t* pointer=RAWBUFF;
         for (j = 0; j<y; j++)
         {
@@ -100,7 +98,7 @@ int main(){
             SDL_Delay(5);
 		//SDL_RenderClear(render);
 //SDL_free(render);
-            SDLStart=1;
+         //   SDLStart=1;
 /*  stop capturing */
             ioctl(file_device, VIDIOC_STREAMOFF, &type);
  /* release buffers */
