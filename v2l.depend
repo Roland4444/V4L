@@ -1,0 +1,15 @@
+# depslib dependency file v1.0
+1510522242 source:/home/roland/Documents/v2l/main.c
+	<stdio.h>
+	<stdlib.h>
+	<stdio.h>
+	<stdlib.h>
+	<fcntl.h>
+	<errno.h>
+	<string.h>
+	<stdlib.h>
+	<stdio.h>
+	<linux/videodev2.h>
+	<sys/mman.h>
+	<SDL2/SDL.h>
+
