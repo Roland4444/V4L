@@ -22,7 +22,7 @@ int main(){
     SDL_Window *wnd;
     SDL_Renderer *render;
     if (SDL_Init(SDL_INIT_VIDEO) != 0)
-                return SDL_GetError();
+        return SDL_GetError();
     wnd = SDL_CreateWindow("Title",  800,  0, W, H, SDL_WINDOW_SHOWN);
     render = SDL_CreateRenderer(wnd, -1, SDL_RENDERER_ACCELERATED);
     struct v4l2_buffer LOADBUFF;
@@ -31,13 +31,11 @@ int main(){
     {
 //setting by default 640 X 480 X2 bytes YUV2  30 fps;;
 /* prepare buffer on mmap*/
-
         RQBUFF.count = 1;
         RQBUFF.type = V4L2_BUF_TYPE_VIDEO_CAPTURE;
         RQBUFF.memory = V4L2_MEMORY_MMAP;
         ioctl(file_device,VIDIOC_REQBUFS, &RQBUFF);
-        /* start capturing */
-        printf("@@@@ start capturing@@@@");
+        printf("/* start capturing */");
         memset(&LOADBUFF, 0, sizeof(LOADBUFF));
         LOADBUFF.type        = V4L2_BUF_TYPE_VIDEO_CAPTURE;
         LOADBUFF.memory      = V4L2_MEMORY_MMAP;
@@ -93,7 +91,6 @@ int main(){
             SDL_Delay(5);
 		//SDL_RenderClear(render);
 //SDL_free(render);
-         //   SDLStart=1;
 /*  stop capturing */
             ioctl(file_device, VIDIOC_STREAMOFF, &type);
  /* release buffers */
