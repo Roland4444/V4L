@@ -12,7 +12,6 @@
 #include <SDL2/SDL.h>
 #define W 640
 #define H 480
-int SDLStart=0;
 int main(){
     char *device_name= "/dev/video0";
     int  file_device = open(device_name, O_RDWR, 0);
@@ -26,18 +25,19 @@ int main(){
                 return SDL_GetError();
     wnd = SDL_CreateWindow("Title",  800,  0, W, H, SDL_WINDOW_SHOWN);
     render = SDL_CreateRenderer(wnd, -1, SDL_RENDERER_ACCELERATED);
+    struct v4l2_buffer LOADBUFF;
+    struct v4l2_requestbuffers   RQBUFF;
     while (1)
     {
 //setting by default 640 X 480 X2 bytes YUV2  30 fps;;
 /* prepare buffer on mmap*/
-        struct v4l2_requestbuffers   RQBUFF;
+
         RQBUFF.count = 1;
         RQBUFF.type = V4L2_BUF_TYPE_VIDEO_CAPTURE;
         RQBUFF.memory = V4L2_MEMORY_MMAP;
         ioctl(file_device,VIDIOC_REQBUFS, &RQBUFF);
         /* start capturing */
         printf("@@@@ start capturing@@@@");
-        struct v4l2_buffer LOADBUFF;
         memset(&LOADBUFF, 0, sizeof(LOADBUFF));
         LOADBUFF.type        = V4L2_BUF_TYPE_VIDEO_CAPTURE;
         LOADBUFF.memory      = V4L2_MEMORY_MMAP;
